@@ -2,7 +2,7 @@ export default function Home() {
   return (
     <main className="relative h-screen w-screen overflow-hidden bg-[var(--color-bg)]">
       {/* Giant overflowing name */}
-      <div className="absolute inset-0 flex items-end justify-center overflow-hidden">
+      <div className="absolute inset-0 flex items-end justify-start overflow-hidden md:justify-center">
         <h1
           className="select-none whitespace-nowrap italic leading-[0.85] text-[#1400e6]"
           style={{
