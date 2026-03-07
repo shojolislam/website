@@ -1,12 +1,10 @@
 import { useState, useEffect } from "react";
 import ElasticSlider from "./ElasticSlider";
+import { colors, fonts } from "./tokens";
 
-const MONO = "'Geist Mono', monospace";
-
-// Logo SVG — white paths by default, inverted (dark) in light mode
 function Logo({ dark }: { dark: boolean }) {
-  const outerFill = dark ? "#06080A" : "white";
-  const innerFill = dark ? "white" : "#06080A";
+  const outerFill = dark ? colors.logo : "white";
+  const innerFill = dark ? "white" : colors.logo;
   return (
     <svg
       width="48"
@@ -60,11 +58,7 @@ function LocalTime() {
 function App() {
   const [darkMode, setDarkMode] = useState(true);
 
-  const bg = darkMode ? "#0a0a0a" : "#ffffff";
-  const textColor = darkMode ? "#e5e5e5" : "#171717";
-  const subtleText = darkMode ? "#737373" : "#a3a3a3";
-  const toggleTrackBg = darkMode ? "#1a1a1a" : "#f5f5f5";
-  const toggleThumbBg = darkMode ? "#404040" : "#c4c4c4";
+  const theme = darkMode ? colors.dark : colors.light;
 
   return (
     <div
@@ -72,8 +66,8 @@ function App() {
         height: "100dvh",
         display: "flex",
         flexDirection: "column",
-        backgroundColor: bg,
-        color: textColor,
+        backgroundColor: theme.bg,
+        color: theme.text,
         transition: "background-color 0.3s ease, color 0.3s ease",
       }}
     >
@@ -91,10 +85,10 @@ function App() {
         </a>
         <span
           style={{
-            fontFamily: MONO,
+            fontFamily: fonts.mono,
             fontSize: 13,
             fontWeight: 500,
-            color: subtleText,
+            color: theme.textSubtle,
             fontVariantNumeric: "tabular-nums",
             transition: "color 0.3s ease",
           }}
@@ -134,10 +128,10 @@ function App() {
       >
         <span
           style={{
-            fontFamily: MONO,
+            fontFamily: fonts.mono,
             fontSize: 11,
             fontWeight: 500,
-            color: subtleText,
+            color: theme.textSubtle,
             textTransform: "uppercase",
             letterSpacing: "0.05em",
             transition: "color 0.3s ease",
@@ -146,7 +140,6 @@ function App() {
           Light
         </span>
 
-        {/* Toggle switch */}
         <button
           onClick={() => setDarkMode((prev) => !prev)}
           style={{
@@ -154,7 +147,7 @@ function App() {
             width: 44,
             height: 24,
             borderRadius: 999,
-            backgroundColor: toggleTrackBg,
+            backgroundColor: theme.surface,
             border: "none",
             cursor: "pointer",
             padding: 2,
@@ -168,8 +161,8 @@ function App() {
               width: 20,
               height: 20,
               borderRadius: "50%",
-              backgroundColor: toggleThumbBg,
-              transition: "transform 0.3s ease",
+              backgroundColor: theme.toggleThumb,
+              transition: "transform 0.3s ease, background-color 0.3s ease",
               transform: darkMode ? "translateX(20px)" : "translateX(0px)",
             }}
           />
@@ -177,10 +170,10 @@ function App() {
 
         <span
           style={{
-            fontFamily: MONO,
+            fontFamily: fonts.mono,
             fontSize: 11,
             fontWeight: 500,
-            color: subtleText,
+            color: theme.textSubtle,
             textTransform: "uppercase",
             letterSpacing: "0.05em",
             transition: "color 0.3s ease",

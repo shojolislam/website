@@ -6,6 +6,7 @@ import {
   AnimatePresence,
   MotionValue,
 } from "framer-motion";
+import { colors, fonts } from "./tokens";
 
 interface ElasticSliderProps {
   min?: number;
@@ -15,11 +16,10 @@ interface ElasticSliderProps {
   darkMode?: boolean;
 }
 
-const TRACK_HEIGHT = 38;
+const TRACK_HEIGHT = 42;
 const TRACK_RADIUS = 8;
 const HANDLE_RESTING_WIDTH = 20;
 const HANDLE_PADDING = 4;
-const FILL_COLOR = "#C6FE21";
 
 const HANDLE_HOVER_WIDTH = 26;
 const HANDLE_DRAG_HEIGHT = 54;
@@ -29,8 +29,6 @@ const HANDLE_RESTING_RADIUS = 999;
 
 // Minimum steps between handles
 const MIN_GAP = 4;
-
-const MONO = "'Geist Mono', monospace";
 
 const magnetSpring = { stiffness: 350, damping: 18, mass: 0.5 };
 
@@ -63,7 +61,6 @@ function GooFilterDef() {
   );
 }
 
-// Gold shape — used in goo layers
 function GoldShape({
   leftPos,
   isDragging,
@@ -95,14 +92,13 @@ function GoldShape({
         x: "-50%",
         width,
         height,
-        backgroundColor: FILL_COLOR,
+        backgroundColor: colors.accent,
         borderRadius: HANDLE_RESTING_RADIUS,
       }}
     />
   );
 }
 
-// Interactive overlay: transparent bg + white pill
 function HandleOverlay({
   leftPos,
   isDragging,
@@ -161,7 +157,7 @@ function HandleOverlay({
         style={{
           width: "100%",
           height: "100%",
-          backgroundColor: darkMode ? "#1a1a1a" : "white",
+          backgroundColor: darkMode ? colors.dark.surface : colors.light.bg,
           borderRadius: HANDLE_RESTING_RADIUS,
           boxShadow: isDragging
             ? "0px 8px 16px rgba(0,0,0,0.12), 0px 2px 4px rgba(0,0,0,0.08)"
@@ -189,6 +185,7 @@ function TickMarks({
   darkMode?: boolean;
 }) {
   const steps = max - min;
+  const theme = darkMode ? colors.dark : colors.light;
 
   const ticks = useMemo(() => {
     const arr = [];
@@ -200,13 +197,11 @@ function TickMarks({
     return arr;
   }, [steps, min]);
 
-  const TICK_ZONE = 16;
+  const TICK_ZONE = 20;
   const LABEL_HEIGHT = 14;
   const GAP = 2;
   const totalHeight = TICK_ZONE + GAP + LABEL_HEIGHT;
 
-  // "above": value label on top, ticks grow upward from bottom
-  // "below": ticks grow downward from top, value label on bottom
   const isAbove = position === "above";
 
   return (
@@ -220,32 +215,29 @@ function TickMarks({
         const leftPos = `${(tick.index / steps) * 100}%`;
 
         const tickHeight = isActive
-          ? 16
+          ? 20
           : tick.isMajor
-            ? 10
+            ? 13
             : tick.isMid
-              ? 6
-              : 3;
+              ? 8
+              : 4;
 
         return (
           <div key={tick.index} style={{ pointerEvents: "none" }}>
-            {/* Tick bar — grows from the track edge */}
             <motion.div
               animate={{
                 height: tickHeight,
                 backgroundColor: isActive
-                  ? FILL_COLOR
+                  ? colors.accent
                   : tick.isMajor
-                    ? darkMode ? "#525252" : "#a3a3a3"
-                    : darkMode ? "#333333" : "#d4d4d4",
+                    ? theme.tickMajor
+                    : theme.tickMinor,
                 width: isActive ? 2 : 1,
               }}
               transition={{ type: "spring", stiffness: 500, damping: 30 }}
               style={{
                 position: "absolute",
                 left: leftPos,
-                // Above: ticks anchored to bottom edge, grow upward
-                // Below: ticks anchored to top edge, grow downward
                 ...(isAbove
                   ? { bottom: 0 }
                   : { top: 0 }),
@@ -254,13 +246,10 @@ function TickMarks({
               }}
             />
 
-            {/* Value label */}
             <div
               style={{
                 position: "absolute",
                 left: leftPos,
-                // Above: label sits above the ticks
-                // Below: label sits below the ticks
                 ...(isAbove
                   ? { top: 0 }
                   : { bottom: 0 }),
@@ -281,10 +270,10 @@ function TickMarks({
                     }}
                     style={{
                       display: "block",
-                      fontFamily: MONO,
+                      fontFamily: fonts.mono,
                       fontSize: 11,
                       fontWeight: 600,
-                      color: darkMode ? "#ffffff" : "#171717",
+                      color: theme.text,
                       fontVariantNumeric: "tabular-nums",
                       whiteSpace: "nowrap",
                       textAlign: "center",
@@ -343,6 +332,8 @@ export default function ElasticSlider({
 
   const steps = max - min;
   const minGapRatio = MIN_GAP / steps;
+
+  const theme = darkMode ? colors.dark : colors.light;
 
   const getRatioFromEvent = useCallback(
     (clientX: number) => {
@@ -453,15 +444,15 @@ export default function ElasticSlider({
       <GooFilterDef />
 
       {/* Title + subtitle */}
-      <div style={{ marginBottom: 24 }}>
+      <div style={{ marginBottom: 32 }}>
         <span
           style={{
             display: "block",
-            fontFamily: "'Neue Machina Ultrabold', 'Neue Machina', sans-serif",
-            fontSize: 20,
+            fontFamily: fonts.display,
+            fontSize: 24,
             fontWeight: 800,
             textTransform: "uppercase",
-            color: darkMode ? "#e5e5e5" : "#171717",
+            color: theme.text,
             letterSpacing: "0.05em",
             transition: "color 0.3s ease",
           }}
@@ -471,10 +462,10 @@ export default function ElasticSlider({
         <span
           style={{
             display: "block",
-            fontFamily: MONO,
+            fontFamily: fonts.mono,
             fontSize: 12,
             fontWeight: 400,
-            color: darkMode ? "#737373" : "#a3a3a3",
+            color: theme.textSubtle,
             marginTop: 10,
             transition: "color 0.3s ease",
           }}
@@ -483,7 +474,7 @@ export default function ElasticSlider({
         </span>
       </div>
 
-      {/* Tick marks + value labels — above the track */}
+      {/* Tick marks */}
       <div style={{ marginBottom: 12 }}>
         <TickMarks
           min={min}
@@ -503,7 +494,7 @@ export default function ElasticSlider({
           position: "relative",
           width: "100%",
           height: TRACK_HEIGHT,
-          backgroundColor: darkMode ? "#1a1a1a" : "#f5f5f5",
+          backgroundColor: theme.surface,
           borderRadius: TRACK_RADIUS,
           cursor: draggingHandle ? "grabbing" : "pointer",
           touchAction: "none",
@@ -532,7 +523,7 @@ export default function ElasticSlider({
               left: leftPercent,
               right: fillRight,
               height: TRACK_HEIGHT,
-              backgroundColor: FILL_COLOR,
+              backgroundColor: colors.accent,
               borderRadius: TRACK_RADIUS,
               marginLeft: draggingHandle ? -GOO_EXTEND : 0,
               marginRight: draggingHandle ? -GOO_EXTEND : 0,
@@ -567,7 +558,7 @@ export default function ElasticSlider({
               left: leftPercent,
               right: fillRight,
               height: TRACK_HEIGHT,
-              backgroundColor: FILL_COLOR,
+              backgroundColor: colors.accent,
               borderRadius: TRACK_RADIUS,
               marginLeft: draggingHandle ? -GOO_EXTEND : 0,
               marginRight: draggingHandle ? -GOO_EXTEND : 0,
