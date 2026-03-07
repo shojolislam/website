@@ -64,7 +64,7 @@ function App() {
   const bg = darkMode ? "#0a0a0a" : "#ffffff";
   const textColor = darkMode ? "#e5e5e5" : "#171717";
   const subtleText = darkMode ? "#737373" : "#a3a3a3";
-  const toggleTrackBg = darkMode ? "#262626" : "#e5e5e5";
+  const toggleTrackBg = darkMode ? "#1a1a1a" : "#f5f5f5";
   const toggleThumbBg = PRIMARY;
 
   return (
@@ -87,7 +87,9 @@ function App() {
           padding: "20px 24px",
         }}
       >
-        <Logo dark={!darkMode} />
+        <a href="/" style={{ display: "inline-flex" }}>
+          <Logo dark={!darkMode} />
+        </a>
         <span
           style={{
             fontFamily: MONO,

@@ -109,12 +109,14 @@ function HandleOverlay({
   isHovered,
   onDragStart,
   onHoverChange,
+  darkMode = false,
 }: {
   leftPos: MotionValue<string>;
   isDragging: boolean;
   isHovered: boolean;
   onDragStart: (e: React.PointerEvent) => void;
   onHoverChange: (hovered: boolean) => void;
+  darkMode?: boolean;
 }) {
   const width = useSpring(HANDLE_RESTING_WIDTH, magnetSpring);
   const height = useSpring(TRACK_HEIGHT, magnetSpring);
@@ -159,7 +161,7 @@ function HandleOverlay({
         style={{
           width: "100%",
           height: "100%",
-          backgroundColor: "white",
+          backgroundColor: darkMode ? "#1a1a1a" : "white",
           borderRadius: HANDLE_RESTING_RADIUS,
           boxShadow: isDragging
             ? "0px 8px 16px rgba(0,0,0,0.12), 0px 2px 4px rgba(0,0,0,0.08)"
@@ -515,7 +517,7 @@ export default function ElasticSlider({
           The non-dragged handle renders crisp in its own unfiltered layer.
         */}
 
-        {/* LEFT handle goo layer — extra vertical space for Safari filter clipping */}
+        {/* LEFT handle goo layer — clip horizontally to track bounds, expand vertically for Safari */}
         <div
           style={{
             position: "absolute",
@@ -523,7 +525,8 @@ export default function ElasticSlider({
             right: 0,
             top: -((HANDLE_DRAG_HEIGHT - TRACK_HEIGHT) / 2 + 4),
             bottom: -((HANDLE_DRAG_HEIGHT - TRACK_HEIGHT) / 2 + 4),
-            overflow: "visible",
+            overflowX: "clip",
+            overflowY: "visible",
             filter: leftDragging ? "url(#goo)" : "none",
             pointerEvents: "none",
           }}
@@ -547,7 +550,7 @@ export default function ElasticSlider({
           />
         </div>
 
-        {/* RIGHT handle goo layer — extra vertical space for Safari filter clipping */}
+        {/* RIGHT handle goo layer — clip horizontally to track bounds, expand vertically for Safari */}
         <div
           style={{
             position: "absolute",
@@ -555,7 +558,8 @@ export default function ElasticSlider({
             right: 0,
             top: -((HANDLE_DRAG_HEIGHT - TRACK_HEIGHT) / 2 + 4),
             bottom: -((HANDLE_DRAG_HEIGHT - TRACK_HEIGHT) / 2 + 4),
-            overflow: "visible",
+            overflowX: "clip",
+            overflowY: "visible",
             filter: rightDragging ? "url(#goo)" : "none",
             pointerEvents: "none",
           }}
@@ -586,6 +590,7 @@ export default function ElasticSlider({
           isHovered={leftHovered}
           onDragStart={(e) => startDrag("left", e)}
           onHoverChange={(h) => setHoveredHandle(h ? "left" : null)}
+          darkMode={darkMode}
         />
 
         <HandleOverlay
@@ -594,6 +599,7 @@ export default function ElasticSlider({
           isHovered={rightHovered}
           onDragStart={(e) => startDrag("right", e)}
           onHoverChange={(h) => setHoveredHandle(h ? "right" : null)}
+          darkMode={darkMode}
         />
       </div>
 
