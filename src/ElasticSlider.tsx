@@ -338,10 +338,9 @@ export default function ElasticSlider({
 
   const leftPercent = useTransform(leftSpring, (v) => `${v * 100}%`);
   const rightPercent = useTransform(rightSpring, (v) => `${v * 100}%`);
-  // Extended fill positions for goo layers — extend past handles so goo merges symmetrically
+  const fillLeft = useTransform(leftSpring, (v) => `${v * 100}%`);
+  const fillRight = useTransform(rightSpring, (v) => `${(1 - v) * 100}%`);
   const GOO_EXTEND = 12;
-  const fillLeftExtended = useTransform(leftSpring, (v) => `calc(${v * 100}% - ${GOO_EXTEND}px)`);
-  const fillRightExtended = useTransform(rightSpring, (v) => `calc(${(1 - v) * 100}% - ${GOO_EXTEND}px)`);
 
   const steps = max - min;
   const minGapRatio = MIN_GAP / steps;
@@ -533,16 +532,19 @@ export default function ElasticSlider({
             pointerEvents: "none",
           }}
         >
-          {/* Fill bar — extended past handles so goo merges symmetrically */}
+          {/* Fill bar — extends past handles only when dragging for symmetric goo */}
           <motion.div
             style={{
               position: "absolute",
               top: (HANDLE_DRAG_HEIGHT - TRACK_HEIGHT) / 2 + 4,
-              left: fillLeftExtended,
-              right: fillRightExtended,
+              left: fillLeft,
+              right: fillRight,
               height: TRACK_HEIGHT,
               backgroundColor: FILL_COLOR,
               borderRadius: 0,
+              marginLeft: draggingHandle ? -GOO_EXTEND : 0,
+              marginRight: draggingHandle ? -GOO_EXTEND : 0,
+              transition: draggingHandle ? "none" : "margin 0.2s ease",
             }}
           />
           <GoldShape
@@ -565,16 +567,19 @@ export default function ElasticSlider({
             pointerEvents: "none",
           }}
         >
-          {/* Fill bar — extended past handles so goo merges symmetrically */}
+          {/* Fill bar — extends past handles only when dragging for symmetric goo */}
           <motion.div
             style={{
               position: "absolute",
               top: (HANDLE_DRAG_HEIGHT - TRACK_HEIGHT) / 2 + 4,
-              left: fillLeftExtended,
-              right: fillRightExtended,
+              left: fillLeft,
+              right: fillRight,
               height: TRACK_HEIGHT,
               backgroundColor: FILL_COLOR,
               borderRadius: 0,
+              marginLeft: draggingHandle ? -GOO_EXTEND : 0,
+              marginRight: draggingHandle ? -GOO_EXTEND : 0,
+              transition: draggingHandle ? "none" : "margin 0.2s ease",
             }}
           />
           <GoldShape
