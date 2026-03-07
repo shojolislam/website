@@ -515,24 +515,27 @@ export default function ElasticSlider({
           The non-dragged handle renders crisp in its own unfiltered layer.
         */}
 
-        {/* LEFT handle goo layer */}
+        {/* LEFT handle goo layer — extra vertical space for Safari filter clipping */}
         <div
           style={{
             position: "absolute",
-            inset: 0,
+            left: 0,
+            right: 0,
+            top: -((HANDLE_DRAG_HEIGHT - TRACK_HEIGHT) / 2 + 4),
+            bottom: -((HANDLE_DRAG_HEIGHT - TRACK_HEIGHT) / 2 + 4),
             overflow: "visible",
             filter: leftDragging ? "url(#goo)" : "none",
             pointerEvents: "none",
           }}
         >
-          {/* Fill bar (duplicate — same color, overlaps harmlessly) */}
+          {/* Fill bar — positioned within expanded container to align with track */}
           <motion.div
             style={{
               position: "absolute",
-              top: 0,
+              top: (HANDLE_DRAG_HEIGHT - TRACK_HEIGHT) / 2 + 4,
               left: leftPercent,
               right: fillRight,
-              height: "100%",
+              height: TRACK_HEIGHT,
               backgroundColor: FILL_COLOR,
               borderRadius: 0,
             }}
@@ -544,24 +547,27 @@ export default function ElasticSlider({
           />
         </div>
 
-        {/* RIGHT handle goo layer */}
+        {/* RIGHT handle goo layer — extra vertical space for Safari filter clipping */}
         <div
           style={{
             position: "absolute",
-            inset: 0,
+            left: 0,
+            right: 0,
+            top: -((HANDLE_DRAG_HEIGHT - TRACK_HEIGHT) / 2 + 4),
+            bottom: -((HANDLE_DRAG_HEIGHT - TRACK_HEIGHT) / 2 + 4),
             overflow: "visible",
             filter: rightDragging ? "url(#goo)" : "none",
             pointerEvents: "none",
           }}
         >
-          {/* Fill bar (duplicate) */}
+          {/* Fill bar — positioned within expanded container to align with track */}
           <motion.div
             style={{
               position: "absolute",
-              top: 0,
+              top: (HANDLE_DRAG_HEIGHT - TRACK_HEIGHT) / 2 + 4,
               left: leftPercent,
               right: fillRight,
-              height: "100%",
+              height: TRACK_HEIGHT,
               backgroundColor: FILL_COLOR,
               borderRadius: 0,
             }}
