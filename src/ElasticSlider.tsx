@@ -338,7 +338,10 @@ export default function ElasticSlider({
 
   const leftPercent = useTransform(leftSpring, (v) => `${v * 100}%`);
   const rightPercent = useTransform(rightSpring, (v) => `${v * 100}%`);
-  const fillRight = useTransform(rightSpring, (v) => `${(1 - v) * 100}%`);
+  // Extended fill positions for goo layers — extend past handles so goo merges symmetrically
+  const GOO_EXTEND = 12;
+  const fillLeftExtended = useTransform(leftSpring, (v) => `calc(${v * 100}% - ${GOO_EXTEND}px)`);
+  const fillRightExtended = useTransform(rightSpring, (v) => `calc(${(1 - v) * 100}% - ${GOO_EXTEND}px)`);
 
   const steps = max - min;
   const minGapRatio = MIN_GAP / steps;
@@ -525,19 +528,18 @@ export default function ElasticSlider({
             right: 0,
             top: -((HANDLE_DRAG_HEIGHT - TRACK_HEIGHT) / 2 + 4),
             bottom: -((HANDLE_DRAG_HEIGHT - TRACK_HEIGHT) / 2 + 4),
-            overflowX: "clip",
-            overflowY: "visible",
+            overflow: "visible",
             filter: leftDragging ? "url(#goo)" : "none",
             pointerEvents: "none",
           }}
         >
-          {/* Fill bar — positioned within expanded container to align with track */}
+          {/* Fill bar — extended past handles so goo merges symmetrically */}
           <motion.div
             style={{
               position: "absolute",
               top: (HANDLE_DRAG_HEIGHT - TRACK_HEIGHT) / 2 + 4,
-              left: leftPercent,
-              right: fillRight,
+              left: fillLeftExtended,
+              right: fillRightExtended,
               height: TRACK_HEIGHT,
               backgroundColor: FILL_COLOR,
               borderRadius: 0,
@@ -550,7 +552,7 @@ export default function ElasticSlider({
           />
         </div>
 
-        {/* RIGHT handle goo layer — clip horizontally to track bounds, expand vertically for Safari */}
+        {/* RIGHT handle goo layer — expand vertically for Safari */}
         <div
           style={{
             position: "absolute",
@@ -558,19 +560,18 @@ export default function ElasticSlider({
             right: 0,
             top: -((HANDLE_DRAG_HEIGHT - TRACK_HEIGHT) / 2 + 4),
             bottom: -((HANDLE_DRAG_HEIGHT - TRACK_HEIGHT) / 2 + 4),
-            overflowX: "clip",
-            overflowY: "visible",
+            overflow: "visible",
             filter: rightDragging ? "url(#goo)" : "none",
             pointerEvents: "none",
           }}
         >
-          {/* Fill bar — positioned within expanded container to align with track */}
+          {/* Fill bar — extended past handles so goo merges symmetrically */}
           <motion.div
             style={{
               position: "absolute",
               top: (HANDLE_DRAG_HEIGHT - TRACK_HEIGHT) / 2 + 4,
-              left: leftPercent,
-              right: fillRight,
+              left: fillLeftExtended,
+              right: fillRightExtended,
               height: TRACK_HEIGHT,
               backgroundColor: FILL_COLOR,
               borderRadius: 0,
