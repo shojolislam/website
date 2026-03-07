@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import ElasticSlider from "./ElasticSlider";
 
-const PRIMARY = "#C6FE21";
 const MONO = "'Geist Mono', monospace";
 
 // Logo SVG — white paths by default, inverted (dark) in light mode
@@ -65,7 +64,7 @@ function App() {
   const textColor = darkMode ? "#e5e5e5" : "#171717";
   const subtleText = darkMode ? "#737373" : "#a3a3a3";
   const toggleTrackBg = darkMode ? "#1a1a1a" : "#f5f5f5";
-  const toggleThumbBg = PRIMARY;
+  const toggleThumbBg = darkMode ? "#404040" : "#c4c4c4";
 
   return (
     <div
