@@ -350,7 +350,7 @@ export default function ElasticSlider({
   );
 
   // Overscroll threshold — how far past the edge (as ratio) to trigger mode toggle
-  const OVERSCROLL_THRESHOLD = 0.06;
+  const OVERSCROLL_THRESHOLD = -0.02;
 
   const startDrag = useCallback(
     (handle: "left" | "right", e: React.PointerEvent) => {
