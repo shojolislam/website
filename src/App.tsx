@@ -56,7 +56,7 @@ function LocalTime() {
 }
 
 function App() {
-  const [darkMode, setDarkMode] = useState(true);
+  const [darkMode, setDarkMode] = useState(false);
 
   const theme = darkMode ? colors.dark : colors.light;
 
