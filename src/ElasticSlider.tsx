@@ -13,6 +13,7 @@ interface ElasticSliderProps {
   max?: number;
   defaultRange?: [number, number];
   onChange?: (range: [number, number]) => void;
+  onModeToggle?: () => void;
   darkMode?: boolean;
 }
 
@@ -296,6 +297,7 @@ export default function ElasticSlider({
   max = 100,
   defaultRange = [20, 65],
   onChange,
+  onModeToggle,
   darkMode = false,
 }: ElasticSliderProps) {
   const trackRef = useRef<HTMLDivElement>(null);
@@ -338,30 +340,46 @@ export default function ElasticSlider({
   const getRatioFromEvent = useCallback(
     (clientX: number) => {
       const track = trackRef.current;
-      if (!track) return 0;
+      if (!track) return { clamped: 0, raw: 0 };
       const rect = track.getBoundingClientRect();
-      const raw = Math.max(
-        0,
-        Math.min(1, (clientX - rect.left) / rect.width)
-      );
-      return Math.round(raw * steps) / steps;
+      const raw = (clientX - rect.left) / rect.width;
+      const clamped = Math.round(Math.max(0, Math.min(1, raw)) * steps) / steps;
+      return { clamped, raw };
     },
     [steps]
   );
+
+  // Overscroll threshold — how far past the edge (as ratio) to trigger mode toggle
+  const OVERSCROLL_THRESHOLD = 0.06;
 
   const startDrag = useCallback(
     (handle: "left" | "right", e: React.PointerEvent) => {
       e.preventDefault();
       setDraggingHandle(handle);
+      let toggled = false;
 
       const onMove = (ev: PointerEvent) => {
-        const ratio = getRatioFromEvent(ev.clientX);
+        const { clamped, raw } = getRatioFromEvent(ev.clientX);
+
+        // Overscroll detection — drag left handle past 0 or right handle past 100
+        if (!toggled && onModeToggle) {
+          if (handle === "left" && raw < -OVERSCROLL_THRESHOLD) {
+            toggled = true;
+            onModeToggle();
+            if (navigator.vibrate) navigator.vibrate(15);
+          } else if (handle === "right" && raw > 1 + OVERSCROLL_THRESHOLD) {
+            toggled = true;
+            onModeToggle();
+            if (navigator.vibrate) navigator.vibrate(15);
+          }
+        }
+
         setRange((prev) => {
           const next: [number, number] = [...prev];
           if (handle === "left") {
-            next[0] = Math.min(ratio, prev[1] - minGapRatio);
+            next[0] = Math.min(clamped, prev[1] - minGapRatio);
           } else {
-            next[1] = Math.max(ratio, prev[0] + minGapRatio);
+            next[1] = Math.max(clamped, prev[0] + minGapRatio);
           }
           leftSpring.set(next[0]);
           rightSpring.set(next[1]);
@@ -382,22 +400,22 @@ export default function ElasticSlider({
       window.addEventListener("pointermove", onMove);
       window.addEventListener("pointerup", onUp);
     },
-    [getRatioFromEvent, leftSpring, rightSpring, min, max, onChange, minGapRatio]
+    [getRatioFromEvent, leftSpring, rightSpring, min, max, onChange, onModeToggle, minGapRatio]
   );
 
   const handleTrackClick = useCallback(
     (e: React.PointerEvent) => {
-      const ratio = getRatioFromEvent(e.clientX);
-      const distToLeft = Math.abs(ratio - range[0]);
-      const distToRight = Math.abs(ratio - range[1]);
+      const { clamped } = getRatioFromEvent(e.clientX);
+      const distToLeft = Math.abs(clamped - range[0]);
+      const distToRight = Math.abs(clamped - range[1]);
       const nearest = distToLeft <= distToRight ? "left" : "right";
 
       setRange((prev) => {
         const next: [number, number] = [...prev];
         if (nearest === "left") {
-          next[0] = Math.min(ratio, prev[1] - minGapRatio);
+          next[0] = Math.min(clamped, prev[1] - minGapRatio);
         } else {
-          next[1] = Math.max(ratio, prev[0] + minGapRatio);
+          next[1] = Math.max(clamped, prev[0] + minGapRatio);
         }
         leftSpring.set(next[0]);
         rightSpring.set(next[1]);

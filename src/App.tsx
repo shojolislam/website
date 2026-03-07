@@ -112,6 +112,7 @@ function App() {
           max={100}
           defaultRange={[20, 65]}
           onChange={() => {}}
+          onModeToggle={() => setDarkMode((prev) => !prev)}
           darkMode={darkMode}
         />
       </main>
@@ -120,66 +121,32 @@ function App() {
       <footer
         style={{
           display: "flex",
-          justifyContent: "flex-end",
+          justifyContent: "space-between",
           alignItems: "center",
-          gap: 12,
           padding: "20px 24px",
         }}
       >
         <span
           style={{
             fontFamily: fonts.mono,
-            fontSize: 11,
-            fontWeight: 500,
+            fontSize: 12,
+            fontWeight: 400,
             color: theme.textSubtle,
-            textTransform: "uppercase",
-            letterSpacing: "0.05em",
             transition: "color 0.3s ease",
           }}
         >
-          Light
-        </span>
-
-        <button
-          onClick={() => setDarkMode((prev) => !prev)}
-          style={{
-            position: "relative",
-            width: 44,
-            height: 24,
-            borderRadius: 999,
-            backgroundColor: theme.surface,
-            border: "none",
-            cursor: "pointer",
-            padding: 2,
-            transition: "background-color 0.3s ease",
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          <div
+          Wanna chat? Shoot me an email
+          <br />
+          <a
+            href="mailto:me@shojol.com"
             style={{
-              width: 20,
-              height: 20,
-              borderRadius: "50%",
-              backgroundColor: theme.toggleThumb,
-              transition: "transform 0.3s ease, background-color 0.3s ease",
-              transform: darkMode ? "translateX(20px)" : "translateX(0px)",
+              color: theme.text,
+              textDecoration: "none",
+              fontWeight: 500,
             }}
-          />
-        </button>
-
-        <span
-          style={{
-            fontFamily: fonts.mono,
-            fontSize: 11,
-            fontWeight: 500,
-            color: theme.textSubtle,
-            textTransform: "uppercase",
-            letterSpacing: "0.05em",
-            transition: "color 0.3s ease",
-          }}
-        >
-          Dark
+          >
+            me@shojol.com
+          </a>
         </span>
       </footer>
     </div>
