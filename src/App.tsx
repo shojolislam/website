@@ -118,7 +118,7 @@ function App() {
           min={0}
           max={100}
           defaultRange={[20, 65]}
-          onChange={(range) => console.log("Range:", range)}
+          onChange={() => {}}
           darkMode={darkMode}
         />
       </main>

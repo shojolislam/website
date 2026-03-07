@@ -338,7 +338,6 @@ export default function ElasticSlider({
 
   const leftPercent = useTransform(leftSpring, (v) => `${v * 100}%`);
   const rightPercent = useTransform(rightSpring, (v) => `${v * 100}%`);
-  const fillLeft = useTransform(leftSpring, (v) => `${v * 100}%`);
   const fillRight = useTransform(rightSpring, (v) => `${(1 - v) * 100}%`);
   const GOO_EXTEND = 12;
 
@@ -512,14 +511,7 @@ export default function ElasticSlider({
           transition: "background-color 0.3s ease",
         }}
       >
-        {/*
-          Separate goo layers per handle.
-          Each layer has: fill bar + that handle's gold shape.
-          Filter only activates on the layer of the dragged handle.
-          The non-dragged handle renders crisp in its own unfiltered layer.
-        */}
-
-        {/* LEFT handle goo layer — clip horizontally to track bounds, expand vertically for Safari */}
+        {/* LEFT handle goo layer */}
         <div
           style={{
             position: "absolute",
@@ -532,12 +524,12 @@ export default function ElasticSlider({
             pointerEvents: "none",
           }}
         >
-          {/* Fill bar — extends past handles only when dragging for symmetric goo */}
+          {/* Fill bar */}
           <motion.div
             style={{
               position: "absolute",
               top: (HANDLE_DRAG_HEIGHT - TRACK_HEIGHT) / 2 + 4,
-              left: fillLeft,
+              left: leftPercent,
               right: fillRight,
               height: TRACK_HEIGHT,
               backgroundColor: FILL_COLOR,
@@ -554,7 +546,7 @@ export default function ElasticSlider({
           />
         </div>
 
-        {/* RIGHT handle goo layer — expand vertically for Safari */}
+        {/* RIGHT handle goo layer */}
         <div
           style={{
             position: "absolute",
@@ -567,12 +559,12 @@ export default function ElasticSlider({
             pointerEvents: "none",
           }}
         >
-          {/* Fill bar — extends past handles only when dragging for symmetric goo */}
+          {/* Fill bar */}
           <motion.div
             style={{
               position: "absolute",
               top: (HANDLE_DRAG_HEIGHT - TRACK_HEIGHT) / 2 + 4,
-              left: fillLeft,
+              left: leftPercent,
               right: fillRight,
               height: TRACK_HEIGHT,
               backgroundColor: FILL_COLOR,
@@ -589,7 +581,7 @@ export default function ElasticSlider({
           />
         </div>
 
-        {/* INTERACTION LAYER: white pills */}
+        {/* Handle overlays */}
         <HandleOverlay
           leftPos={leftPercent}
           isDragging={leftDragging}
@@ -608,7 +600,6 @@ export default function ElasticSlider({
           darkMode={darkMode}
         />
       </div>
-
     </div>
   );
 }
