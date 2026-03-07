@@ -17,7 +17,7 @@ interface ElasticSliderProps {
 
 const TRACK_HEIGHT = 38;
 const TRACK_RADIUS = 8;
-const HANDLE_RESTING_WIDTH = 16;
+const HANDLE_RESTING_WIDTH = 20;
 const HANDLE_PADDING = 4;
 const FILL_COLOR = "#C6FE21";
 
@@ -472,7 +472,7 @@ export default function ElasticSlider({
             fontSize: 12,
             fontWeight: 400,
             color: darkMode ? "#737373" : "#a3a3a3",
-            marginTop: 4,
+            marginTop: 10,
             transition: "color 0.3s ease",
           }}
         >

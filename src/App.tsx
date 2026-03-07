@@ -125,7 +125,7 @@ function App() {
       <footer
         style={{
           display: "flex",
-          justifyContent: "center",
+          justifyContent: "flex-end",
           alignItems: "center",
           gap: 12,
           padding: "20px 24px",
