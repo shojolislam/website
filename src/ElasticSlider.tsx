@@ -284,7 +284,7 @@ function TickMarks({
                       fontFamily: MONO,
                       fontSize: 11,
                       fontWeight: 600,
-                      color: FILL_COLOR,
+                      color: darkMode ? "#ffffff" : "#171717",
                       fontVariantNumeric: "tabular-nums",
                       whiteSpace: "nowrap",
                       textAlign: "center",
@@ -453,7 +453,7 @@ export default function ElasticSlider({
       <GooFilterDef />
 
       {/* Title + subtitle */}
-      <div style={{ marginBottom: 12 }}>
+      <div style={{ marginBottom: 24 }}>
         <span
           style={{
             display: "block",
