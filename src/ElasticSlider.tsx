@@ -461,7 +461,7 @@ export default function ElasticSlider({
     >
       <GooFilterDef />
 
-      {/* Title + subtitle */}
+      {/* Title */}
       <div style={{ marginBottom: 32 }}>
         <span
           style={{
@@ -475,20 +475,7 @@ export default function ElasticSlider({
             transition: "color 0.3s ease",
           }}
         >
-          New website coming soon
-        </span>
-        <span
-          style={{
-            display: "block",
-            fontFamily: fonts.mono,
-            fontSize: 12,
-            fontWeight: 400,
-            color: theme.textSubtle,
-            marginTop: 10,
-            transition: "color 0.3s ease",
-          }}
-        >
-          In the meantime, play with this slider
+          Play with this slider
         </span>
       </div>
 
